@@ -1,4 +1,4 @@
-package com.akl.hungryapp_user;
+package shop.akl.hungryapp_user;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

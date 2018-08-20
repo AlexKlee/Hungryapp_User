@@ -1,4 +1,4 @@
-package com.akl.hungryapp_user;
+package shop.akl.hungryapp_user;
 
 import org.junit.Test;
 

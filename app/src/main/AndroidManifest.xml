@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.akl.hungryapp_user">
+    package="kr.co.gizmos.shop">
 
     <!-- 반드시 추가 -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Main2Activity" />
-        <activity android:name=".MapActivity"></activity>
+        <activity android:name=".MapActivity" />
     </application>
 
 </manifest>
