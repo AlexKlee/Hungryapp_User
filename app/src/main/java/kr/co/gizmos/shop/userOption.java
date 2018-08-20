@@ -1,12 +1,13 @@
 package kr.co.gizmos.shop;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -27,7 +28,7 @@ public class userOption extends AppCompatActivity {
     LinearLayout optionLayout;
     Button btnSetupYes;
 
-    Spinner spinRangeDist, spinPrice1, spinPrice2;
+    Spinner spinRanged, spinPrice1, spinPrice2;
     RadioGroup rg1;
     RadioButton rbInc,rbExc;
 
@@ -43,7 +44,7 @@ public class userOption extends AppCompatActivity {
     R.id.chOri1, R.id.chOri2, R.id.chOri3};*/
 
     //옵션값 저장
-    String menutag, range, pay_min, pay_max;
+    String menutag, range, pay_min, pay_max, choice_re;
 
     SharedPreferences oppref;
     String id;
@@ -53,12 +54,23 @@ public class userOption extends AppCompatActivity {
     //4.음식종류체크박스
 
     String menut[]= new String[34];
+    String menuName[]={"돼지고기","소고기","닭고기","양고기","기타육류","생선","갑각류","조개류","곡물","채식",
+            "찌개","탕","볶음","구이","조림","국","튀김","찜","삶은","말린","발효","숙성","안 익힘",
+            "가정식","백반","한식","중식","양식","분식","일식","기타외국식",
+            "국내산","수입산","혼합"};
     //돼지고기,소고기,닭고기,양고기,기타육류,생선,갑각류,조개류,곡물,채식, 10 재료
     // 찌개,탕,볶음,구이,조림,국,튀김,찜,삶은,말린,발효,숙성,안 익힘, 13조리법
     // 가정식,백반,한식,중식,양식,분식,일식,기타외국식, 8음식유형
     // 국내산,수입산,혼합  원산지
 
-
+    //스피너 거리
+    String ranged[] = {"100","200","300","500","1000"};
+    //스피너 최소, 최대
+    String priceMin[]={"1000","5000","10000"};
+    String priceMax[]={"10000","15000","20000","50000"};
+    //스피너용 어댑터
+    ArrayAdapter<String> adSprange, adSpinMin, adSpinMax;
+    String posR, posMin, posMax;//스피너 선택 위치저장 int?
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +100,7 @@ public class userOption extends AppCompatActivity {
 
         //int chid=getResources().getIdentifier("chM"+1, "id", getPackageName());
         //Toast.makeText(getApplicationContext(), "chid:"+chid+", R.id:"+R.id.chM1,Toast.LENGTH_SHORT).show();
-        spinRangeDist=findViewById(R.id.spinRangeDist);
+        spinRanged=findViewById(R.id.spinRangeDist);
         spinPrice1=findViewById(R.id.spinPrice1);
         spinPrice2=findViewById(R.id.spinPrice2);
         rg1=findViewById(R.id.rg1);
@@ -102,35 +114,94 @@ public class userOption extends AppCompatActivity {
         optionLayout.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);     //영역추가없이 내용물 안쪽에 투명하게 스크롤바 생성
 
 
+        //스피너 설정(거리, 가격대1,2)
+        adSprange=new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item, ranged);
+        adSpinMin=new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,priceMin);
+        adSpinMax=new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,priceMax);
+        spinRanged.setAdapter(adSprange);
+        spinPrice1.setAdapter(adSpinMin);
+        spinPrice2.setAdapter(adSpinMax);
+
+
         load();
 
-        if(menut.length==34) {
-            for (int i = 0; i < 34; i++) {
-                checkboxes[i].setChecked(true);
+        //스피너 선택
+        spinRanged.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                posR=ranged[position];
             }
-        }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                posR="";
+            }
+        });//
+
+        spinPrice1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                posMin=priceMin[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                posMin="";
+            }
+        });//최소값
+
+        spinPrice2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                posMax=priceMax[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                posMax="";
+            }
+        });//최대값
 
 
+        rg1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.rbInc://포함
+                        choice_re="포함";
+                        break;
+                    case R.id.rbExc://제외
+                        choice_re="제외";
+                        break;
+                }
+            }
+        });//방문식당 포함여부(라디오버튼처리)
 
-        btnSetupYes.setOnClickListener(new View.OnClickListener() {
+        btnSetupYes.setOnClickListener(new View.OnClickListener() {//변경된 옵션값 저장
             @Override
             public void onClick(View v) {
 
             }
         });//btn end
 
+        for(int i=0; i<34; i++){
+            if(checkboxes[i].isChecked()){//체크되었다면
+                if(i<33){
+                    menutag += menut[i] +",";
+                }
+            }
+        }
+        //쉼표삭제
 
         //기존 옵션 불러와서 표시.
 
     }//onCreate end
-
 
     private void load(){//접속해서 option불러오기.
         oppref= getSharedPreferences("appData", MODE_PRIVATE);
         id=oppref.getString("user_id","");
         HttpTask optLoad= new HttpTask();
         optLoad.execute(id);
-
     }
 
     //아이디로 로그인, 기존 설정메뉴 불러오기.
@@ -155,9 +226,43 @@ public class userOption extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "로그인 성공", Toast.LENGTH_SHORT).show();
              //   Toast.makeText(getApplicationContext(), range+","+pay_max+","+pay_min+","+menutag, Toast.LENGTH_SHORT).show();
                 //로그인 성공시 값불러오기.
+                String tag[]=menutag.split(",");
+                menut=tag;
 
-                menut=menutag.split(",");
+                //메뉴이름체크
+                for(int i=0; i<menut.length;i++){
+                    for(int j=0; j<menuName.length; j++){
+                        if(menut[i].equals(menuName[j])){
+                            checkboxes[i].setChecked(true);
+                            i++;//?
+                        }
+                    }
+                }
+                //기존 선택 포함여부
+                if(choice_re.equals("제외")){
+                    rbInc.setChecked(false);
+                    rbExc.setChecked(true);
+                }else if(!choice_re.equals("제외")){
+                    rbInc.setChecked(true);
+                    rbExc.setChecked(false);
+                }
 
+                //스피너 표기(거리, 가격대 추가!)
+                for(int i=0; i<ranged.length;i++){//거리
+                    if(range.equals(ranged[i])){
+                        spinRanged.setSelection(i);
+                    }
+                }
+                for(int i=0; i<priceMin.length;i++){//최소값
+                    if(pay_min.equals(priceMin[i])){
+                        spinPrice1.setSelection(i);
+                    }
+                }
+                for(int i=0;i<priceMax.length;i++){//최대값
+                    if(pay_max.equals(priceMax[i])){
+                        spinPrice2.setSelection(i);
+                    }
+                }
 
             }
             else{
@@ -205,6 +310,7 @@ public class userOption extends AppCompatActivity {
                     pay_max=jobj.getString("pay_max");
                     pay_min=jobj.getString("pay_min");
                     menutag=jobj.getString("tag");
+                    choice_re=jobj.getString("choice_re");
                 }
                 else {
                     receiveMsg = "실패";
