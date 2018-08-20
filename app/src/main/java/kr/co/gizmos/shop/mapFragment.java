@@ -62,7 +62,9 @@ public class mapFragment extends Fragment {
         nGepoint=new NGeoPoint(longit,latit);
         nMapView.setClickable(true);
         nMapView.setEnabled(true);
+        //nMapView.setBuiltInZoomControls(true,null);//화면 줌기능(버튼추가식)
         nMapView.setFocusable(true);
+        nMapView.setFocusableInTouchMode(true);
         nMapView.requestFocus();
     }
     @Override
@@ -72,6 +74,7 @@ public class mapFragment extends Fragment {
 
         mapController=nMapView.getMapController();
         mapController.setMapCenter(nGepoint,13);
+        mapController.setZoomEnabled(true);//줌허용
         setMarker();
 
 
@@ -86,6 +89,19 @@ public class mapFragment extends Fragment {
     public void onPause() {
         super.onPause();
         mMapContext.onPause();
+
+        //변경된 현재위치 값 sharedpreference에 저장
+        String longitude=String.valueOf(longit);
+        String latitude=String.valueOf(latit);
+
+        fragPref=this.getActivity().getSharedPreferences("userPos", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = fragPref.edit();
+        //editor.clear();//기존 값 삭제?
+        editor.putString("longt",longitude);
+        editor.putString("latt",latitude);
+        editor.commit();//
+
+
     }
     @Override
     public void onStop() {

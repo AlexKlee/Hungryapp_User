@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="여기에 NAVER지도 표시"/>
+            android:text="현재위치가 잘못나와있을 경우 지도를 움직여주세요."/>
     </LinearLayout>
     <Button
         android:layout_width="match_parent"

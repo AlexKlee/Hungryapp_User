@@ -115,7 +115,7 @@ public class Main2Activity extends AppCompatActivity {
         btnRecom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //위치정보, 옵션정보 이용하여 서버에서 정보받아오기.
             }
         });//btnRecom end
 
@@ -124,6 +124,9 @@ public class Main2Activity extends AppCompatActivity {
         btnSetup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //옵션화면으로이동, 옵션설정 받아오기.
+                Intent itSetup= new Intent(getApplicationContext(), userOption.class);
+                startActivity(itSetup);
 
             }
         });//btnSetup end

@@ -61,14 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void save(){//id값 저장하는 함수
-
-
         //에디터 객체.put타입(저장시킬 이름, 저장시킬 값)
         //저장시킬 이름이 이미존재하면 저장 안함
         HttpTask2 saveTask = new HttpTask2();
         saveTask.execute();
-
-
     }
 
     private void load(){//id값 불러오는 함수
@@ -76,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         saveLogin=appData.getBoolean("save_login", false);//뒤에는 default값
         id=appData.getString("user_id", "");
         Log.i("checkid_load", id);
-
     }
 
     //아이디가 없을 경우 아이디 생성
