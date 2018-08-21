@@ -140,8 +140,12 @@ public class Main2Activity extends AppCompatActivity {
 
     //최근 식사내용 요청문
     public void recentFood(){
-        Intent it2= getIntent();
-        String jsonArray = it2.getStringExtra("jsonArray");
+
+        //shared preferences로변경할것
+        //Intent it2= getIntent();
+        mapref=getSharedPreferences("appData",MODE_PRIVATE);
+
+        String jsonArray = mapref.getString("jsonarray","");
         try{
             JSONArray jarray = new JSONArray(jsonArray);
             for(int i=0; i<jarray.length(); i++){//jsonArray에서 JSONobject로 나눠서, 필요항목들 arraylist에 추가

@@ -172,9 +172,13 @@ public class MainActivity extends AppCompatActivity {
             if(receiveMsg.equals("성공")){
                 Toast.makeText(getApplicationContext(), "로그인 성공", Toast.LENGTH_SHORT).show();
 
-                //로그인 성공시 intent이동
+                //로그인 성공시 sharedpreferrence값 저장
+                appData= getSharedPreferences("appData", MODE_PRIVATE);
+                SharedPreferences.Editor editor = appData.edit();
+                editor.putString("jsonarray", items.toString());//jsonarray내용 String으로 변환해서 저장
+                editor.commit();
                 Intent it = new Intent(getApplicationContext(), Main2Activity.class);
-                it.putExtra("jsonArray", items.toString());
+//                it.putExtra("jsonArray", items.toString());
                 startActivity(it);
             }
             else{

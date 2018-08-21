@@ -1,6 +1,7 @@
 package kr.co.gizmos.shop;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -44,7 +45,7 @@ public class userOption extends AppCompatActivity {
     R.id.chOri1, R.id.chOri2, R.id.chOri3};*/
 
     //옵션값 저장
-    String menutag, range, pay_min, pay_max, choice_re;
+    String menutag="", range="", pay_min="", pay_max="", choice_re="";
 
     SharedPreferences oppref;
     String id;
@@ -53,6 +54,7 @@ public class userOption extends AppCompatActivity {
     //3.추천유형(기존선택지역 포함 유무)
     //4.음식종류체크박스
 
+    //체크된메뉴값 저장
     String menut[]= new String[34];
     String menuName[]={"돼지고기","소고기","닭고기","양고기","기타육류","생선","갑각류","조개류","곡물","채식",
             "찌개","탕","볶음","구이","조림","국","튀김","찜","삶은","말린","발효","숙성","안 익힘",
@@ -124,7 +126,6 @@ public class userOption extends AppCompatActivity {
 
 
         load();
-
         //스피너 선택
         spinRanged.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -146,7 +147,6 @@ public class userOption extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                posMin="";
             }
         });//최소값
 
@@ -158,10 +158,8 @@ public class userOption extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                posMax="";
             }
         });//최대값
-
 
         rg1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -180,20 +178,13 @@ public class userOption extends AppCompatActivity {
         btnSetupYes.setOnClickListener(new View.OnClickListener() {//변경된 옵션값 저장
             @Override
             public void onClick(View v) {
-
+                //옵션값 저장 + 메인2로 넘어가기.
+                save();
             }
         });//btn end
 
-        for(int i=0; i<34; i++){
-            if(checkboxes[i].isChecked()){//체크되었다면
-                if(i<33){
-                    menutag += menut[i] +",";
-                }
-            }
-        }
         //쉼표삭제
 
-        //기존 옵션 불러와서 표시.
 
     }//onCreate end
 
@@ -203,6 +194,25 @@ public class userOption extends AppCompatActivity {
         HttpTask optLoad= new HttpTask();
         optLoad.execute(id);
     }
+
+    private void save(){//저장버튼 눌렀을 때 값받아오기.
+        //체크된 메뉴값 모음
+        for(int i=0; i<34; i++){
+            if(checkboxes[i].isChecked()){//체크되었다면
+                menutag=menutag+menuName[i]+",";
+            }
+        }
+//        menutag=str.toString();//StringBuilder를 String으로 변환
+        menutag=menutag.substring(0,menutag.length()-1);
+
+        HttpTask2 upOpttask= new HttpTask2();
+        //id불러오기
+        oppref= getSharedPreferences("appData", MODE_PRIVATE);
+        id=oppref.getString("user_id","");
+//        Toast.makeText(getApplicationContext(),id+","+posR+","+posMin+","+posMax+","+choice_re+","+menutag,Toast.LENGTH_SHORT).show();
+        upOpttask.execute(id,posR,posMin,posMax,choice_re,menutag);
+    }//save end
+
 
     //아이디로 로그인, 기존 설정메뉴 불러오기.
     private class HttpTask extends AsyncTask<String, Void, String> {
@@ -233,8 +243,8 @@ public class userOption extends AppCompatActivity {
                 for(int i=0; i<menut.length;i++){
                     for(int j=0; j<menuName.length; j++){
                         if(menut[i].equals(menuName[j])){
-                            checkboxes[i].setChecked(true);
-                            i++;//?
+                            checkboxes[j].setChecked(true);
+                            break;
                         }
                     }
                 }
@@ -311,6 +321,83 @@ public class userOption extends AppCompatActivity {
                     pay_min=jobj.getString("pay_min");
                     menutag=jobj.getString("tag");
                     choice_re=jobj.getString("choice_re");
+                }
+                else {
+                    receiveMsg = "실패";
+                    //Toast.makeText(getApplicationContext(), "주소가 확인되지 않습니다. 정확한 주소를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return receiveMsg;
+        }
+    }
+
+    //옵션설정값 저장.
+    private class HttpTask2 extends AsyncTask<String, Void, String> {
+        String address="", sendMsg="", receiveMsg="";
+        ProgressDialog dlg = new ProgressDialog(userOption.this);
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            address="http://00645.net/eat/user_update.php";
+            dlg.setMessage("접속 중");
+            dlg.show();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            dlg.dismiss();
+            if(receiveMsg.equals("성공")){
+                Toast.makeText(getApplicationContext(), "옵션변경 성공", Toast.LENGTH_SHORT).show();
+                //옵션변경 성공 시 메인2로 이동
+                Intent itmain = new Intent(getApplicationContext(), Main2Activity.class);
+                startActivity(itmain);
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "옵션변경 실패", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            try{
+                URL url = new URL(address);
+                HttpURLConnection con = (HttpURLConnection)url.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset:UTF-8");
+
+                con.setDoInput(true);
+                con.setDoOutput(true);
+                OutputStreamWriter os =new OutputStreamWriter(con.getOutputStream());
+                sendMsg="app=user&user_id="+strings[0]+"&range="+strings[1]+"&pay_min="+strings[2]+"&pay_max="+strings[3]+"&choice_re="+strings[4]+"&tag="+strings[5];
+                os.write(sendMsg);
+                os.flush();
+                os.close();
+
+
+                int responseCode = con.getResponseCode();
+                BufferedReader br;
+                if(responseCode==200) { // 정상 호출
+                    br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                } else {  // 에러 발생
+                    br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                }
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+                while ((inputLine = br.readLine()) != null) {//stringbuffer에 계속 추가 저장
+                    response.append(inputLine);
+                }
+                br.close();
+
+                //전송받은 완성된 문자열을 JSON 객체에 넣는다.
+                JSONObject jobj = new JSONObject(response.toString());//string buffer값을 json객체에 추가
+                if(jobj.has("user_type")) {
+                    receiveMsg="성공";
                 }
                 else {
                     receiveMsg = "실패";
