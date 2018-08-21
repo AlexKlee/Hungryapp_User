@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".RandomRecommend">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="메뉴 이름" />
+
+        <TextView
+            android:id="@+id/txMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="메뉴정보,가격, 몇인분, 거리, " />
+        <!--<TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="가격"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="가격표시"
+        android:id="@+id/txPrice"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="몇인분"
+        android:id="@+id/txPNum"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="거리"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="약~분"
+        android:id="@+id/txTime"/>-->
+
+        <ImageView
+            android:id="@+id/foodImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/tang1" />
+
+        <LinearLayout
+            android:id="@+id/mapFrag2"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="지도표기." />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="매장정보" />
+
+        <TextView
+            android:id="@+id/txShopInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="주소, 연락처, 테이블수, 테이블 좌석수, 테이크아웃 여부, 배달 여부 " />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="함께파는 메뉴" />
+
+        <TextView
+            android:id="@+id/txOtherMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="다른메뉴들" />
+
+    </LinearLayout>
+</ScrollView>

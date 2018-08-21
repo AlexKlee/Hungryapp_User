@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,7 +37,6 @@ import java.util.ArrayList;
 
 public class Main2Activity extends AppCompatActivity {
     //메인화면뷰 선언
-    LinearLayout layout;//스크롤바 추가위한 설정, 후에 확인 및 수정 필요1!!!
     ListView list1;
     Button btnRecom, btnSetup;
     //리스트아이템화면 뷰 선언
@@ -61,7 +59,6 @@ public class Main2Activity extends AppCompatActivity {
         btnRecom=findViewById(R.id.btnRecom);
         btnSetup=findViewById(R.id.btnSetup);
         list1=findViewById(R.id.list1);
-        layout=findViewById(R.id.layout);
 
 
 
@@ -70,11 +67,6 @@ public class Main2Activity extends AppCompatActivity {
         myadap=new MyAdapter(this);
         list1.setAdapter(myadap);
         setListViewHeight(list1);//리스트뷰 길이조절
-
-        //scrollbar 설정 변경,
-        layout.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);     //영역추가없이 내용물 안쪽에 투명하게 스크롤바 생성
-        layout.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-
 
         //현재위치 받아오기, GPS, NETWORK값 받아오기
         lm=(LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -116,6 +108,8 @@ public class Main2Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //위치정보, 옵션정보 이용하여 서버에서 정보받아오기.
+                Intent it = new Intent(getApplicationContext(), RandomRecommend.class);
+                startActivity(it);
             }
         });//btnRecom end
 

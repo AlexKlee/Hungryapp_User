@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            address="http://00645.net/eat/last_menu.php";
+            address="http://00645.net/eat/user_main.php";
             dlg.setMessage("접속 중");
             dlg.show();
         }

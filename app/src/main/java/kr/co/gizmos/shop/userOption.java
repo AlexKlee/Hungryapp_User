@@ -26,7 +26,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class userOption extends AppCompatActivity {
-    LinearLayout optionLayout;
     Button btnSetupYes;
 
     Spinner spinRanged, spinPrice1, spinPrice2;
@@ -100,7 +99,6 @@ public class userOption extends AppCompatActivity {
         }
 
 
-        //int chid=getResources().getIdentifier("chM"+1, "id", getPackageName());
         //Toast.makeText(getApplicationContext(), "chid:"+chid+", R.id:"+R.id.chM1,Toast.LENGTH_SHORT).show();
         spinRanged=findViewById(R.id.spinRangeDist);
         spinPrice1=findViewById(R.id.spinPrice1);
@@ -108,12 +106,7 @@ public class userOption extends AppCompatActivity {
         rg1=findViewById(R.id.rg1);
         rbInc=findViewById(R.id.rbInc);
         rbExc=findViewById(R.id.rbExc);
-        optionLayout=findViewById(R.id.optionLayout);
         btnSetupYes=findViewById(R.id.btnSetupYes);
-
-        //scrollbar 설정 변경,
-        optionLayout.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-        optionLayout.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);     //영역추가없이 내용물 안쪽에 투명하게 스크롤바 생성
 
 
         //스피너 설정(거리, 가격대1,2)

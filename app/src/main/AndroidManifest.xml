@@ -28,8 +28,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Main2Activity" />
-        <activity android:name=".MapActivity" />
-        <activity android:name=".userOption"></activity>
+        <activity android:name=".userOption" />
+        <activity android:name=".RandomRecommend"></activity>
     </application>
 
 </manifest>

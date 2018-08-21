@@ -90,6 +90,13 @@ public class mapFragment extends Fragment {
         super.onPause();
         mMapContext.onPause();
 
+
+
+    }
+    @Override
+    public void onStop() {//종료시 최종 설정된 현재위치값 전달
+        mMapContext.onStop();
+        super.onStop();
         //변경된 현재위치 값 sharedpreference에 저장
         String longitude=String.valueOf(longit);
         String latitude=String.valueOf(latit);
@@ -101,12 +108,6 @@ public class mapFragment extends Fragment {
         editor.putString("latt",latitude);
         editor.commit();//
 
-
-    }
-    @Override
-    public void onStop() {
-        mMapContext.onStop();
-        super.onStop();
     }
     @Override
     public void onDestroyView() {
@@ -128,6 +129,7 @@ public class mapFragment extends Fragment {
         poiData.addPOIitem(longit,latit,String.valueOf(longit+", "+latit),NMapPOIflagType.FROM,0);
         poiData.endPOIdata();
         mapOverlayManager.createPOIdataOverlay(poiData,null);
+
     }
     private NMapView.OnMapStateChangeListener changeListener = new NMapView.OnMapStateChangeListener() {
         @Override
