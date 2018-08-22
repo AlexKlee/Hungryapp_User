@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
   String id=null;// db에 저장된 폰 id값
 
   SharedPreferences appData;//아이디 자체저장위한 객체
-  private boolean saveLogin;//아이디 저장여부.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void load(){//id값 불러오는 함수
         appData= getSharedPreferences("appData", MODE_PRIVATE);
-        saveLogin=appData.getBoolean("save_login", false);//뒤에는 default값
         id=appData.getString("user_id", "");
         Log.i("checkid_load", id);
     }
@@ -95,10 +93,8 @@ public class MainActivity extends AppCompatActivity {
             if(receiveMsg.equals("성공")){//아이디 생성 성공 시, 아이디 저장
                 appData= getSharedPreferences("appData", MODE_PRIVATE);
                 SharedPreferences.Editor editor = appData.edit();
-                editor.putBoolean("save_login", true);//저장여부설정
                 editor.putString("user_id", id); //db에서 받아온 아이디 값 저장
                 editor.commit();
-                Log.i("checkid_save", id);
             }
             else{
                 Toast.makeText(getApplicationContext(), "아이디 생성 실패", Toast.LENGTH_SHORT).show();

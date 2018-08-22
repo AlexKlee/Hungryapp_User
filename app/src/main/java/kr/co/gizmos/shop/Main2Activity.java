@@ -281,7 +281,7 @@ public class Main2Activity extends AppCompatActivity {
             lm.removeUpdates(mlocationListener);
 
             //임시저장
-            mapref=getSharedPreferences("userPos",MODE_PRIVATE);
+            mapref=getSharedPreferences("appData",MODE_PRIVATE);
             SharedPreferences.Editor mapeditor=mapref.edit();
 
             mapeditor.putString("longt",longit);

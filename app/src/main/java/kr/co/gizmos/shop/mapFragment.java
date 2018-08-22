@@ -54,7 +54,7 @@ public class mapFragment extends Fragment {
         nMapView.setClientId(CLIENT_ID);
         mMapContext.setupMapView(nMapView);
 
-        fragPref=this.getActivity().getSharedPreferences("userPos", Context.MODE_PRIVATE);
+        fragPref=this.getActivity().getSharedPreferences("appData", Context.MODE_PRIVATE);
         String longt=fragPref.getString("longt","0");
         String latt=fragPref.getString("latt","0");
         longit=Double.parseDouble(longt);
@@ -101,7 +101,7 @@ public class mapFragment extends Fragment {
         String longitude=String.valueOf(longit);
         String latitude=String.valueOf(latit);
 
-        fragPref=this.getActivity().getSharedPreferences("userPos", Context.MODE_PRIVATE);
+        fragPref=this.getActivity().getSharedPreferences("appData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = fragPref.edit();
         //editor.clear();//기존 값 삭제?
         editor.putString("longt",longitude);

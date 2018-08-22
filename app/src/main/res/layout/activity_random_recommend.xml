@@ -87,5 +87,23 @@
             android:layout_height="wrap_content"
             android:text="다른메뉴들" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="그래 이거 먹자!"
+                android:id="@+id/btnYes"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="다시 추천"
+                android:id="@+id/btnAgain"/>
+        </LinearLayout>
+
     </LinearLayout>
 </ScrollView>
