@@ -18,7 +18,7 @@ import com.nhn.android.maps.overlay.NMapPOIdata;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 
 public class mapFragment extends Fragment {
-
+    //메인화면 본인 현재위치 확인용으로 설정됨.
     private NMapContext mMapContext;
     private static final String CLIENT_ID = "u6M6OeXr7S0v4vBG587W";// 애플리케이션 클라이언트 아이디 값
     //추가된내용
@@ -126,7 +126,7 @@ public class mapFragment extends Fragment {
 
         NMapPOIdata poiData = new NMapPOIdata(1,nMapViewerResProvider);
         poiData.beginPOIdata(1);
-        poiData.addPOIitem(longit,latit,String.valueOf(longit+", "+latit),NMapPOIflagType.FROM,0);
+        poiData.addPOIitem(longit,latit,String.valueOf(longit+", "+latit),NMapPOIflagType.FROM,0);//마커 클릭시 좌표값 표시. 후에 삭제
         poiData.endPOIdata();
         mapOverlayManager.createPOIdataOverlay(poiData,null);
 
@@ -160,3 +160,7 @@ public class mapFragment extends Fragment {
         }
     };//
 }
+
+
+
+//float metersToPixels(NGeoPoint center, float meters)	전달된 좌표를 중심으로 실제 거리(meters)를 화면상의 거리(pixels)로 변환한다.
