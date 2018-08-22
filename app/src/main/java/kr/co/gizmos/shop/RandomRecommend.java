@@ -71,7 +71,8 @@ public class RandomRecommend extends AppCompatActivity {
         String map_x = rcpref.getString("longt", "");
         String map_y=rcpref.getString("latt","");
         HttpTask loadFood = new HttpTask();
-        loadFood.execute(id, map_x, map_y);
+        String person="3";
+        loadFood.execute(id, map_x, map_y,person);
 
 
         //그래이거먹자 클릭하여, 가게업자에게 고객 방문예정 알림 보내기,
@@ -216,7 +217,7 @@ public class RandomRecommend extends AppCompatActivity {
                 con.setDoInput(true);
                 con.setDoOutput(true);
                 OutputStreamWriter osw =new OutputStreamWriter(con.getOutputStream());
-                sendMsg="app=user&user_id="+strings[0]+"&map_x="+strings[1]+"&map_y="+strings[2];
+                sendMsg="app=user&user_id="+strings[0]+"&map_x="+strings[1]+"&map_y="+strings[2]+"&person="+strings[3];
                 osw.write(sendMsg);
                 osw.flush();
                 osw.close();

@@ -37,7 +37,12 @@
         android:text="추천 조건 설정"
         android:textSize="20sp"
         android:id="@+id/btnSetup"/>
-
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edtPerson"
+        android:hint="인원입력"
+        android:inputType="number"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

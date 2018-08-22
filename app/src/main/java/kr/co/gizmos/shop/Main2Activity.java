@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ public class Main2Activity extends AppCompatActivity {
     Button btnRecom, btnSetup;
     //리스트아이템화면 뷰 선언
     TextView txlistDate, txlistCon;
+    EditText edtPerson;
 
     ArrayList<MyData> arrMyData= new ArrayList<>();
 
@@ -56,6 +58,8 @@ public class Main2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main2_temp);
         setTitle("진짜메인화면(수정할것)");
         //액티비티 이동하며 아이디와 기존 방문내역 확인 후 출력
+
+        edtPerson=findViewById(R.id.edtPerson);
         btnRecom=findViewById(R.id.btnRecom);
         btnSetup=findViewById(R.id.btnSetup);
         list1=findViewById(R.id.list1);
