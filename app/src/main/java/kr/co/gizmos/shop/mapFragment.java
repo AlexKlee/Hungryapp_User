@@ -122,9 +122,9 @@ public class mapFragment extends Fragment {
     }
 
     private void setMarker(){//마커표시
+        nMapViewerResProvider = new NMapViewerResourceProvider(getActivity());
         mapOverlayManager=new NMapOverlayManager(getActivity(),nMapView,nMapViewerResProvider);
         mapOverlayManager.clearOverlays();
-        nMapViewerResProvider = new NMapViewerResourceProvider(getActivity());
 
         NMapPOIdata poiData = new NMapPOIdata(1,nMapViewerResProvider);
         poiData.beginPOIdata(1);

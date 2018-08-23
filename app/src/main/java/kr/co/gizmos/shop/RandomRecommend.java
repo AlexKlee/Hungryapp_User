@@ -1,9 +1,12 @@
 package kr.co.gizmos.shop;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -94,6 +97,27 @@ public class RandomRecommend extends AppCompatActivity {
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //다이얼로그 예약요청?예약반려?( 확인? 취소?)
+                //다이얼로그 접근중? 멀어지는 중?
+                //백그라운드??????
+
+                //예약확인여부.
+                AlertDialog.Builder dlgReservation = new AlertDialog.Builder(RandomRecommend.this);
+                dlgReservation.setTitle("예약확인");
+                dlgReservation.setMessage("예약하시겠습니까?");
+                dlgReservation.setPositiveButton("확인", new DialogInterface.OnClickListener() {//
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), str[0]+"(으)로 예약되었습니다.",Toast.LENGTH_SHORT).show();
+                        //새로운 액티비티
+                    }
+                });//
+                dlgReservation.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(),"예약 취소되었습니다.",Toast.LENGTH_SHORT).show();
+                    }
+                });
 
             }
         });
@@ -102,7 +126,9 @@ public class RandomRecommend extends AppCompatActivity {
         btnAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //메인2로 이동
+                Intent it2= new Intent(getApplicationContext(),Main2Activity.class);
+                startActivity(it2);
             }
         });
 

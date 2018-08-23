@@ -81,10 +81,12 @@ public class mapFragment2 extends Fragment {
         nMapView.setFocusable(true);
         nMapView.setFocusableInTouchMode(true);
         nMapView.requestFocus();
+        //맵 터치이동시 액티비티내 스크롤 뷰작동 금지위한 리스너 연결
         nMapView.setOnMapStateChangeListener(changeListener);
-
         nMapView.setOnMapViewTouchEventListener(touchListener);
 
+        nMapView.setBuiltInAppControl(true);
+        nMapView.executeNaverMap();
     }
     @Override
     public void onStart(){
@@ -140,14 +142,14 @@ public class mapFragment2 extends Fragment {
     }
 
     private void setMarker(){//마커표시
+        nMapViewerResProvider = new NMapViewerResourceProvider(getActivity());
         mapOverlayManager=new NMapOverlayManager(getActivity(),nMapView,nMapViewerResProvider);
         mapOverlayManager.clearOverlays();
-        nMapViewerResProvider = new NMapViewerResourceProvider(getActivity());
 
         NMapPOIdata poiData = new NMapPOIdata(2,nMapViewerResProvider);
         poiData.beginPOIdata(2);
-        poiData.addPOIitem(longit,latit,String.valueOf(longit+", "+latit),NMapPOIflagType.FROM,1);//마커 클릭시 좌표값 표시. 후에 삭제
-        poiData.addPOIitem(shoplongit,shoplatit,String.valueOf(shoplongit+", "+shoplatit),NMapPOIflagType.TO,2);
+        poiData.addPOIitem(longit,latit,String.valueOf(longit+", "+latit),NMapPOIflagType.FROM,0);//마커 클릭시 좌표값 표시. 후에 삭제
+        poiData.addPOIitem(shoplongit,shoplatit,String.valueOf(shoplongit+", "+shoplatit),NMapPOIflagType.TO,0);
         poiData.endPOIdata();
         mapOverlayManager.createPOIdataOverlay(poiData,null);
 
@@ -187,10 +189,10 @@ public class mapFragment2 extends Fragment {
     private NMapView.OnMapViewTouchEventListener touchListener = new NMapView.OnMapViewTouchEventListener() {
         @Override
         public void onLongPress(NMapView nMapView, MotionEvent motionEvent) {
-            nMapView.setFocusable(true);
+            /*nMapView.setFocusable(true);
             nMapView.setFocusableInTouchMode(true);
             nMapView.requestFocus();
-            scroll1.requestDisallowInterceptTouchEvent(true);
+            scroll1.requestDisallowInterceptTouchEvent(true);*/
         }
 
         @Override
@@ -200,10 +202,8 @@ public class mapFragment2 extends Fragment {
 
         @Override
         public void onTouchDown(NMapView nMapView, MotionEvent motionEvent) {
-            nMapView.setFocusable(true);
-            nMapView.setFocusableInTouchMode(true);
+
             scroll1.requestDisallowInterceptTouchEvent(true);
-            nMapView.requestFocus();
         }
 
         @Override
