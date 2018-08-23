@@ -5,13 +5,11 @@ import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ScrollingView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-
+import android.widget.ScrollView;
 import com.nhn.android.maps.NMapContext;
 import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapView;
@@ -19,6 +17,7 @@ import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.maps.overlay.NMapPOIdata;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
+
 
 public class mapFragment2 extends Fragment {
     //메인화면 본인 현재위치 확인용으로 설정됨.
@@ -36,6 +35,8 @@ public class mapFragment2 extends Fragment {
     double longit, latit;//사용자 현재위치
     double shoplongit, shoplatit;//가게위치
 
+    ScrollView scroll1;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -48,13 +49,16 @@ public class mapFragment2 extends Fragment {
         super.onCreate(savedInstanceState);
         mMapContext=new NMapContext(super.getActivity());
         mMapContext.onCreate();
-
+        scroll1=getActivity().findViewById(R.id.scroll1);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         nMapView=getView().findViewById(R.id.mapView);
+
+
+
         nMapView.setClientId(CLIENT_ID);
         mMapContext.setupMapView(nMapView);
 
@@ -79,7 +83,7 @@ public class mapFragment2 extends Fragment {
         nMapView.requestFocus();
         nMapView.setOnMapStateChangeListener(changeListener);
 
-       // nMapView.setOnMapViewTouchEventListener(touchListener);
+        nMapView.setOnMapViewTouchEventListener(touchListener);
 
     }
     @Override
@@ -180,12 +184,13 @@ public class mapFragment2 extends Fragment {
         }
     };//
 
-/*    private NMapView.OnMapViewTouchEventListener touchListener = new NMapView.OnMapViewTouchEventListener() {
+    private NMapView.OnMapViewTouchEventListener touchListener = new NMapView.OnMapViewTouchEventListener() {
         @Override
         public void onLongPress(NMapView nMapView, MotionEvent motionEvent) {
             nMapView.setFocusable(true);
             nMapView.setFocusableInTouchMode(true);
             nMapView.requestFocus();
+            scroll1.requestDisallowInterceptTouchEvent(true);
         }
 
         @Override
@@ -197,6 +202,7 @@ public class mapFragment2 extends Fragment {
         public void onTouchDown(NMapView nMapView, MotionEvent motionEvent) {
             nMapView.setFocusable(true);
             nMapView.setFocusableInTouchMode(true);
+            scroll1.requestDisallowInterceptTouchEvent(true);
             nMapView.requestFocus();
         }
 
@@ -210,13 +216,15 @@ public class mapFragment2 extends Fragment {
             nMapView.setFocusable(true);
             nMapView.setFocusableInTouchMode(true);
             nMapView.requestFocus();
+            scroll1.requestDisallowInterceptTouchEvent(true);
         }
 
         @Override
         public void onSingleTapUp(NMapView nMapView, MotionEvent motionEvent) {
 
         }
-    };*/
+    };
+
 }
 
 

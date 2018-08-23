@@ -1,5 +1,6 @@
 package kr.co.gizmos.shop;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,9 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.view.DragEvent;
-import android.view.MotionEvent;
-import android.widget.ScrollView;
+import android.widget.FrameLayout;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -37,16 +36,13 @@ import java.util.ArrayList;
 
 public class RandomRecommend extends AppCompatActivity {
     //LinearLayout mapFrag2;
-    Fragment mapFrag2;
+    LinearLayout mapFrag2;
     TextView txMenu;
     TextView txShopInfo, txOtherMenu;
     ImageView foodImage;
 
     Button btnYes, btnAgain;
 
-    SharedPreferences ranPref;
-
-    ScrollView scroll1;
 
     //보내기 id와 현재위치.
     //받기->변수 선언(가게명, 대표명, 연락처, 주소, 가게위치, 테이블 수, 의자최소, 의자 최대,
@@ -65,6 +61,8 @@ public class RandomRecommend extends AppCompatActivity {
     InputMethodManager im;//지도
 
     SharedPreferences rcpref;
+    @SuppressLint("ClickableViewAccessibility")//지도 앱 터치시 스크롤이 고정되게 만들어줌,
+    //suppressLint는 검사에서 제외할 항목ID 입력., 쓸데없는 검사를 빼고 빠르게 실행
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +76,7 @@ public class RandomRecommend extends AppCompatActivity {
 
         btnAgain=findViewById(R.id.btnAgain);
         btnYes=findViewById(R.id.btnYes);
-//        mapFrag2=findViewById(R.id.mapFrag2);
-        scroll1=findViewById(R.id.scroll1);
+        mapFrag2=findViewById(R.id.mapFrag2);
 
         //유저 아이디 좌표위치 전송 및
         //랜덤 음식메뉴와 가게정보 받아오기.
@@ -91,50 +88,6 @@ public class RandomRecommend extends AppCompatActivity {
         HttpTask loadFood = new HttpTask();
         loadFood.execute(id, map_x, map_y,person);
 
-
-        /*mapFrag2.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action=event.getAction();
-                switch (action){
-                    case MotionEvent.ACTION_DOWN:
-                        scroll1.requestDisallowInterceptTouchEvent(true);
-                        mapFrag2.setFocusable(true);
-                        mapFrag2.setFocusableInTouchMode(true);
-                        return false;
-                    case MotionEvent.ACTION_UP:
-                        scroll1.requestDisallowInterceptTouchEvent(false);
-                        return true;
-                    case MotionEvent.ACTION_MOVE:
-                        scroll1.requestDisallowInterceptTouchEvent(true);
-                        mapFrag2.setFocusable(true);
-                        mapFrag2.setFocusableInTouchMode(true);
-                        return false;
-
-                    default:
-                        return true;
-                }
-            }
-        });
-        mapFrag2.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                scroll1.requestDisallowInterceptTouchEvent(true);
-                mapFrag2.setFocusable(true);
-                mapFrag2.setFocusableInTouchMode(true);
-                return false;
-            }
-        });*/
-
-
-        /*mapFrag2.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                mapFrag2.setFocusable(true);
-                mapFrag2.setFocusableInTouchMode(true);
-                return true;
-            }
-        });*/
 
         //그래이거먹자 클릭하여, 가게업자에게 고객 방문예정 알림 보내기,
         //가는길 지도 표기, 멀어지거나 가까워지면 다이얼로그출력(안갈꺼냐? 들어갈꺼냐?로 구분)
