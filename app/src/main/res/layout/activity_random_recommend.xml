@@ -3,6 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll1"
+    android:layout_weight="1"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,29 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="메뉴정보,가격, 몇인분, 거리, " />
-        <!--<TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="가격"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="가격표시"
-        android:id="@+id/txPrice"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="몇인분"
-        android:id="@+id/txPNum"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="거리"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="약~분"
-        android:id="@+id/txTime"/>-->
 
         <ImageView
             android:id="@+id/foodImage"
@@ -53,17 +32,25 @@
             android:scaleType="fitCenter"
             android:src="@drawable/tang1" />
 
-        <LinearLayout
-            android:id="@+id/mapFrag2"
-            android:layout_width="fill_parent"
+        <fragment
+            android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:orientation="vertical">
+            android:id="@+id/mapFrag2"
+            android:name="kr.co.gizmos.shop.mapFragment2"
+            tools:layout="@layout/activity_random_recommend"
+            />
+      <!--  <LinearLayout
+            android:id="@+id/mapFrag2"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            >
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="지도표기." />
-        </LinearLayout>
+        </LinearLayout>-->
 
         <TextView
             android:layout_width="match_parent"

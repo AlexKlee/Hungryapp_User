@@ -1,7 +1,10 @@
 package kr.co.gizmos.shop;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -16,14 +19,18 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ScrollingView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,32 +45,35 @@ import java.util.ArrayList;
 
 public class Main2Activity extends AppCompatActivity {
     //메인화면뷰 선언
+    LinearLayout layout;
     ListView list1;
     Button btnRecom, btnSetup;
     //리스트아이템화면 뷰 선언
     TextView txlistDate, txlistCon;
-    EditText edtPerson;
 
     ArrayList<MyData> arrMyData= new ArrayList<>();
 
     MyAdapter myadap;
     SharedPreferences mapref;
 
+    InputMethodManager im;
+
     //지도관련, 1)현재위치
     LocationManager lm;
     String longit, latit;//경도, 위도
+
+    String[] numArr={"1인","2인","3인","4인","5인","6인","6인이상"};
+    int rnum=0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2_temp);
+        setContentView(R.layout.activity_main2);
         setTitle("진짜메인화면(수정할것)");
         //액티비티 이동하며 아이디와 기존 방문내역 확인 후 출력
-
-        edtPerson=findViewById(R.id.edtPerson);
         btnRecom=findViewById(R.id.btnRecom);
         btnSetup=findViewById(R.id.btnSetup);
         list1=findViewById(R.id.list1);
-
+        layout=findViewById(R.id.layout);
 
 
         //기존 식사 방문기록 나타내기
@@ -106,14 +116,53 @@ public class Main2Activity extends AppCompatActivity {
         FragmentTransaction fTransaction = fm.beginTransaction();
         fTransaction.add(R.id.mapFrag, mFrag);
         fTransaction.commit();
+        im=(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+
+
 
         //메뉴추천
         btnRecom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //위치정보, 옵션정보 이용하여 서버에서 정보받아오기.
-                Intent it = new Intent(getApplicationContext(), RandomRecommend.class);
-                startActivity(it);
+           //     mapref=getSharedPreferences("appData",MODE_PRIVATE);
+          //      SharedPreferences.Editor editor=mapref.edit();
+         //       String person =null;
+        //        person=edtPerson.getText().toString();
+        //        editor.putString("person",person);
+           //     editor.commit();
+                //다이얼로그 호출
+                AlertDialog.Builder dlgNum= new AlertDialog.Builder(Main2Activity.this);
+                dlgNum.setTitle("인원 수를 입력해주세요.");
+                dlgNum.setSingleChoiceItems(numArr, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //btnRecom.setText(numArr[which]);
+                        rnum=Integer.parseInt(numArr[which].replaceAll("[^0-9]",""));//뒤에 값은 스트링배열에서 숫자만 포함시키도록 처리함.
+                    }
+                });
+                dlgNum.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(),"확인을 눌렀습니다. "+ rnum+"명",Toast.LENGTH_SHORT).show();
+                        mapref=getSharedPreferences("appData",MODE_PRIVATE);
+
+                        SharedPreferences.Editor mapeditor=mapref.edit();
+                        String rnumber=String.valueOf(rnum);
+                        //예약인원 입력
+                        mapeditor.putString("rnum",rnumber);
+                        mapeditor.commit();
+                        Intent it = new Intent(getApplicationContext(), RandomRecommend.class);
+                        startActivity(it);
+                    }
+                });//확인버튼
+                dlgNum.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(),"취소되었습니다.",Toast.LENGTH_SHORT).show();
+                    }
+                });//취소버튼
+                dlgNum.show();
             }
         });//btnRecom end
 
@@ -134,7 +183,6 @@ public class Main2Activity extends AppCompatActivity {
 
 
     }//onCreate end
-
 
     //최근 식사내용 요청문
     public void recentFood(){
@@ -223,13 +271,6 @@ public class Main2Activity extends AppCompatActivity {
             return convertView;
         }
     }//adapter end
-
-    //현재위치값 찾기
-
-
-    //지도 검색
-
-
 
 
     //나의 위치 요청

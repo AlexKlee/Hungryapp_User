@@ -1,15 +1,25 @@
 package kr.co.gizmos.shop;
 
+import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import android.view.DragEvent;
+import android.view.MotionEvent;
+import android.widget.ScrollView;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +36,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class RandomRecommend extends AppCompatActivity {
-
+    //LinearLayout mapFrag2;
+    Fragment mapFrag2;
     TextView txMenu;
     TextView txShopInfo, txOtherMenu;
     ImageView foodImage;
@@ -35,6 +46,7 @@ public class RandomRecommend extends AppCompatActivity {
 
     SharedPreferences ranPref;
 
+    ScrollView scroll1;
 
     //보내기 id와 현재위치.
     //받기->변수 선언(가게명, 대표명, 연락처, 주소, 가게위치, 테이블 수, 의자최소, 의자 최대,
@@ -50,6 +62,8 @@ public class RandomRecommend extends AppCompatActivity {
     String otherMenu="";
     final int distTime=0;
 
+    InputMethodManager im;//지도
+
     SharedPreferences rcpref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +75,11 @@ public class RandomRecommend extends AppCompatActivity {
         txShopInfo=findViewById(R.id.txShopInfo);
         txOtherMenu=findViewById(R.id.txOtherMenu);
         foodImage=findViewById(R.id.foodImage);
+
         btnAgain=findViewById(R.id.btnAgain);
         btnYes=findViewById(R.id.btnYes);
+//        mapFrag2=findViewById(R.id.mapFrag2);
+        scroll1=findViewById(R.id.scroll1);
 
         //유저 아이디 좌표위치 전송 및
         //랜덤 음식메뉴와 가게정보 받아오기.
@@ -70,10 +87,54 @@ public class RandomRecommend extends AppCompatActivity {
         String id= rcpref.getString("user_id","");
         String map_x = rcpref.getString("longt", "");
         String map_y=rcpref.getString("latt","");
+        String person=rcpref.getString("rnum", "");
         HttpTask loadFood = new HttpTask();
-        String person="3";
         loadFood.execute(id, map_x, map_y,person);
 
+
+        /*mapFrag2.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action=event.getAction();
+                switch (action){
+                    case MotionEvent.ACTION_DOWN:
+                        scroll1.requestDisallowInterceptTouchEvent(true);
+                        mapFrag2.setFocusable(true);
+                        mapFrag2.setFocusableInTouchMode(true);
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                        scroll1.requestDisallowInterceptTouchEvent(false);
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        scroll1.requestDisallowInterceptTouchEvent(true);
+                        mapFrag2.setFocusable(true);
+                        mapFrag2.setFocusableInTouchMode(true);
+                        return false;
+
+                    default:
+                        return true;
+                }
+            }
+        });
+        mapFrag2.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                scroll1.requestDisallowInterceptTouchEvent(true);
+                mapFrag2.setFocusable(true);
+                mapFrag2.setFocusableInTouchMode(true);
+                return false;
+            }
+        });*/
+
+
+        /*mapFrag2.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                mapFrag2.setFocusable(true);
+                mapFrag2.setFocusableInTouchMode(true);
+                return true;
+            }
+        });*/
 
         //그래이거먹자 클릭하여, 가게업자에게 고객 방문예정 알림 보내기,
         //가는길 지도 표기, 멀어지거나 가까워지면 다이얼로그출력(안갈꺼냐? 들어갈꺼냐?로 구분)
@@ -124,8 +185,8 @@ public class RandomRecommend extends AppCompatActivity {
                     str[1]=jShop.getString("rs_operator");
                     str[2]=jShop.getString("rs_tel");
                     str[3]=jShop.getString("rs_address");
-                    str[4]=jShop.getString("rs_map_x");//미표기
-                    str[5]=jShop.getString("rs_map_y");//미표기
+                    str[4]=jShop.getString("rs_map_x");//
+                    str[5]=jShop.getString("rs_map_y");//
                     str[6]=jShop.getString("distance");
                     str[7]=jShop.getString("rs_table_count");
                     str[8]=jShop.getString("rs_table_size_min");
@@ -149,6 +210,13 @@ public class RandomRecommend extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                //가게 좌표 저장
+                rcpref=getSharedPreferences("appData",MODE_PRIVATE);
+                SharedPreferences.Editor editor=rcpref.edit();
+                editor.putString("shop_map_x",str[4]);
+                editor.putString("shop_map_y",str[5]);
+                editor.commit();
+
                 //메뉴정보표시
                 txMenu.setText(str[14]+"\n"+ "가격 : "+ str[16]+"원 / "+ str[17]+"인분\n"+"거리 : "+"약 "+str[6]+"m    "+ distTime+"\n"
                 );
@@ -169,7 +237,7 @@ public class RandomRecommend extends AppCompatActivity {
                     @Override
                     public void run() {
                         try{
-                            String t = "1";
+                        //    String t = "1";
                             URL url= new URL(str[15]);
                             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
                             conn.setDoInput(true);
@@ -194,10 +262,19 @@ public class RandomRecommend extends AppCompatActivity {
                 // 1)가게위치 표시
                 // 2)본인현재위치 표시와 가게 경로 표시
 
+                mapFragment2 mFrag2= new mapFragment2();
+                mFrag2.setArguments(new Bundle());
+
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction fTransaction = fm.beginTransaction();
+                fTransaction.add(R.id.mapFrag2, mFrag2);
+                fTransaction.commit();
+                im=(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
 
-                RecomData rData = new RecomData(str[0],str[1],str[2],str[3],str[4],str[5],str[6],str[7],str[8],
-                        str[9],str[10],str[11],str[12],str[13],str[14],str[15],str[16],str[17],str[18],str[19],str[20],str[21]);
+
+     //           RecomData rData = new RecomData(str[0],str[1],str[2],str[3],str[4],str[5],str[6],str[7],str[8],
+     //                   str[9],str[10],str[11],str[12],str[13],str[14],str[15],str[16],str[17],str[18],str[19],str[20],str[21]);
 
             }
             else{
