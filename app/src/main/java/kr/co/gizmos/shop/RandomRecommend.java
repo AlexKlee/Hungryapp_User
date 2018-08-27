@@ -59,11 +59,16 @@ public class RandomRecommend extends AppCompatActivity {
     final String str[]=new String[22];//받아온 변수값 저장
     Bitmap bitmap;
     String otherMenu="";
+
+    String person;//예약인원 수
+
     final int distTime=0;
 
     InputMethodManager im;//지도
 
     SharedPreferences rcpref;
+
+
     @SuppressLint("ClickableViewAccessibility")//지도 앱 터치시 스크롤이 고정되게 만들어줌,
     //suppressLint는 검사에서 제외할 항목ID 입력., 쓸데없는 검사를 빼고 빠르게 실행
     @Override
@@ -87,7 +92,7 @@ public class RandomRecommend extends AppCompatActivity {
         String id= rcpref.getString("user_id","");
         String map_x = rcpref.getString("longt", "");
         String map_y=rcpref.getString("latt","");
-        String person=rcpref.getString("rnum", "");
+        person=rcpref.getString("rnum", "1");//전 액티비티에서 확인을 너무빨리누르면 0으로 값이 전달됨.
         HttpTask loadFood = new HttpTask();
         loadFood.execute(id, map_x, map_y,person);
 
@@ -104,11 +109,12 @@ public class RandomRecommend extends AppCompatActivity {
                 //예약확인여부.
                 AlertDialog.Builder dlgReservation = new AlertDialog.Builder(RandomRecommend.this);
                 dlgReservation.setTitle("예약확인");
-                dlgReservation.setMessage("예약하시겠습니까?");
+
+                dlgReservation.setMessage("예약하시겠습니까?\n"+"예약인원 : "+ person+"명");
                 dlgReservation.setPositiveButton("확인", new DialogInterface.OnClickListener() {//
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), str[0]+"(으)로 예약되었습니다.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), str[0]+"(으)로 "+person+"명 예약되었습니다.",Toast.LENGTH_SHORT).show();
                         //새로운 액티비티
                     }
                 });//
@@ -119,6 +125,7 @@ public class RandomRecommend extends AppCompatActivity {
                     }
                 });
 
+                dlgReservation.show();
             }
         });
 

@@ -29,7 +29,8 @@
         </activity>
         <activity android:name=".Main2Activity" />
         <activity android:name=".userOption" />
-        <activity android:name=".RandomRecommend"></activity>
+        <activity android:name=".RandomRecommend" />
+        <activity android:name=".MapReservation"></activity>
     </application>
 
 </manifest>
