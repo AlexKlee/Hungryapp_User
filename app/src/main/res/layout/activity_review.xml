@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="식사 맛있게 하셨나요?
+리뷰와 평점을 남겨주세요."
+        android:textSize="30dp"/>
+
+    <RatingBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:numStars="10"
+        android:rating="5"
+        android:stepSize="1.0"
+        android:isIndicator="false"
+        android:id="@+id/rating"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="fitCenter"
+        android:id="@+id/imgReview"
+        android:src="@drawable/tang1"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="음식제목"
+        android:id="@+id/reviewFood"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edtReview"
+        android:hint="리뷰를 입력해주세요."/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="완료"
+        android:textSize="20dp"
+        android:id="@+id/btnReviewDone"/>
+
+</LinearLayout>
