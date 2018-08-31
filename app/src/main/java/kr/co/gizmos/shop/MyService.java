@@ -31,12 +31,14 @@ public class MyService extends Service implements LocationListener {
     LocationManager locationManager;
     Location userLoc, shopLoc;
     private Handler mHandler = new Handler();
-    private Timer mTimer = null;
+    private Timer mTimer ;
     long notify_interval = 3000;
     public static String str_receiver = "MyService.service.receiver";//??
     Intent intent;
     String activity_name = "";
     ArrayList<Double> arrDist;
+
+    boolean isRun = false;
     public MyService() {
 
     }
@@ -50,6 +52,7 @@ public class MyService extends Service implements LocationListener {
     @Override
     public void onCreate() {
         super.onCreate();
+        isRun=true;
         mTimer = new Timer();
         mTimer.schedule(new TimerTasktoGetLocation(), 0, notify_interval);
         intent = new Intent(str_receiver);
@@ -70,7 +73,10 @@ public class MyService extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        fn_getLocation();
+        if(isRun){
+            fn_getLocation();
+        }
+
     }
 
     @Override
@@ -131,16 +137,39 @@ public class MyService extends Service implements LocationListener {
         }
     }
 
+ /*   @Override
+    public boolean stopService(Intent name) {
+
+        return super.stopService(name);
+
+    }*/
+
+    @Override
+    public void onDestroy() {
+        isRun=false;
+        super.onDestroy();
+
+    //    mTimer=new Timer();
+
+       // mTimer.cancel();
+ //      mTimer=null;
+
+    }
+
     private class TimerTasktoGetLocation extends TimerTask {
         @Override
         public void run() {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    fn_getLocation();
-                }
+            if(isRun) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        fn_getLocation();
+                    }
 
-            });
+                });
+            }else{
+                onDestroy();
+            }
         }
     }
 
@@ -166,7 +195,10 @@ public class MyService extends Service implements LocationListener {
                 seEditor.putString("type", "예약취소");
                 seEditor.commit();
 
+               /* Intent stopit = new Intent(getApplicationContext(), MyService.class);
+                stopService(stopit);*/
                 PendingIntent pie = PendingIntent.getActivity(getApplicationContext(),0,popupIntent,PendingIntent.FLAG_ONE_SHOT);
+
                 try{
                     pie.send();
                 } catch (PendingIntent.CanceledException e) {

@@ -37,10 +37,10 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".AlertDialogActivity"
-            android:theme="@android:style/Theme.Dialog">
-
-        </activity>
+        <activity
+            android:name=".AlertDialogActivity"
+            android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name=".ReviewActivity"></activity>
     </application>
 
 </manifest>

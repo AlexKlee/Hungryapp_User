@@ -79,6 +79,20 @@ public class RandomRecommend extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random_recommend);
         setTitle("메뉴선택");
+        rcpref=getSharedPreferences("appData",MODE_PRIVATE);
+        String servi=rcpref.getString("dlg","");
+        if(servi.equals("service quit")){
+            Intent quitsvit = new Intent(this, MyService.class);
+            stopService(quitsvit);
+            SharedPreferences.Editor editor = rcpref.edit();
+            editor.putString("dlg", "fine");
+            editor.commit();
+
+            Intent it2 = new Intent(this, Main2Activity.class);
+            startActivity(it2);
+            finish();
+        }
+
 
         txMenu=findViewById(R.id.txMenu);
         txShopInfo=findViewById(R.id.txShopInfo);
@@ -91,7 +105,7 @@ public class RandomRecommend extends AppCompatActivity {
 
         //유저 아이디 좌표위치 전송 및
         //랜덤 음식메뉴와 가게정보 받아오기.
-        rcpref=getSharedPreferences("appData",MODE_PRIVATE);
+
         String id= rcpref.getString("user_id","");
         String map_x = rcpref.getString("longt", "");
         String map_y=rcpref.getString("latt","");
