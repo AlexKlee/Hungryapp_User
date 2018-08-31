@@ -30,7 +30,12 @@
         <activity android:name=".Main2Activity" />
         <activity android:name=".userOption" />
         <activity android:name=".RandomRecommend" />
-        <activity android:name=".MapReservation"></activity>
+        <activity android:name=".MapReservation" />
+
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

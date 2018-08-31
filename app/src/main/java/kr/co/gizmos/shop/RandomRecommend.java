@@ -3,6 +3,9 @@ package kr.co.gizmos.shop;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -115,7 +118,16 @@ public class RandomRecommend extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getApplicationContext(), str[0]+"(으)로 "+person+"명 예약되었습니다.",Toast.LENGTH_SHORT).show();
-                        //새로운 액티비티
+
+                        //notification bar 실행할것!!
+
+                        //mapReservaion 액티비티로 이동
+                        Intent itR= new Intent(getApplicationContext(), MapReservation.class);
+                        startActivity(itR);
+                        finish();
+                        Intent its= new Intent(RandomRecommend.this, MyService.class);
+                        startService(its);
+
                     }
                 });//
                 dlgReservation.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -126,6 +138,20 @@ public class RandomRecommend extends AppCompatActivity {
                 });
 
                 dlgReservation.show();
+
+/*                NotificationManager notifiManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                //푸시바 누르면 이동 화면 설정
+                Intent notiIntent = new Intent(RandomRecommend.this, MapReservation.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(RandomRecommend.this,0,notiIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+                Notification.Builder notiBuilder = new Notification.Builder(RandomRecommend.this);
+                notiBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.ic_map_no_02))
+                .setSmallIcon(R.drawable.ic_map_no_02).setContentTitle("그냥 이거먹자")
+                .setContentText("").setWhen(System.currentTimeMillis())
+                .setContentIntent(pendingIntent).setAutoCancel(false)//터치하면 종료
+                .setNumber(1);//거리로?
+                notiBuilder.setOngoing(false);
+                notifiManager.notify(0, notiBuilder.build());*/
             }
         });
 
@@ -136,6 +162,7 @@ public class RandomRecommend extends AppCompatActivity {
                 //메인2로 이동
                 Intent it2= new Intent(getApplicationContext(),Main2Activity.class);
                 startActivity(it2);
+                finish();
             }
         });
 
@@ -163,7 +190,6 @@ public class RandomRecommend extends AppCompatActivity {
             dlg.dismiss();
             if(receiveMsg.equals("성공")){
                 Toast.makeText(getApplicationContext(), "로그인 성공", Toast.LENGTH_SHORT).show();
-                //   Toast.makeText(getApplicationContext(), range+","+pay_max+","+pay_min+","+menutag, Toast.LENGTH_SHORT).show();
                 //로그인 성공시 값불러오기.
 
                 try {
@@ -196,11 +222,12 @@ public class RandomRecommend extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                //가게 좌표 저장
+                //가게 좌표값,주소 저장
                 rcpref=getSharedPreferences("appData",MODE_PRIVATE);
                 SharedPreferences.Editor editor=rcpref.edit();
                 editor.putString("shop_map_x",str[4]);
                 editor.putString("shop_map_y",str[5]);
+                editor.putString("activity_name", "RandomRecommend");//현재 이 액티비티에서 실행하고 있다고. pref에 저장., fragment에서 어떤 앱에서 호출하는지 판단 가능하도록.
                 editor.commit();
 
                 //메뉴정보표시

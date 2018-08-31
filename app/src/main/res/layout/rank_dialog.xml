@@ -17,9 +17,15 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:numStars="10"
-        android:rating="2"
+        android:rating="5"
         android:stepSize="1.0"
         android:isIndicator="false"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edtReview"
+        android:hint="리뷰를 입력해주세요."/>
 
     <Button
         android:layout_width="match_parent"

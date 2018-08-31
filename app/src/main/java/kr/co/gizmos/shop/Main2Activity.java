@@ -1,7 +1,6 @@
 package kr.co.gizmos.shop;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,17 +18,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ScrollingView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -144,8 +140,12 @@ public class Main2Activity extends AppCompatActivity {
                 dlgNum.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        if(rnum==0){//입력이 빠르게 진행될 경우 0으로 저장됨.
+                            rnum=1;
+                        }
                         Toast.makeText(getApplicationContext(),"확인을 눌렀습니다. "+ rnum+"명",Toast.LENGTH_SHORT).show();
                         mapref=getSharedPreferences("appData",MODE_PRIVATE);
+
 
                         SharedPreferences.Editor mapeditor=mapref.edit();
                         String rnumber=String.valueOf(rnum);
@@ -154,6 +154,7 @@ public class Main2Activity extends AppCompatActivity {
                         mapeditor.commit();
                         Intent it = new Intent(getApplicationContext(), RandomRecommend.class);
                         startActivity(it);
+                        finish();
                     }
                 });//확인버튼
                 dlgNum.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -312,10 +313,10 @@ public class Main2Activity extends AppCompatActivity {
             double latitude = location.getLatitude();   //위도
             String provider = location.getProvider();   //위치제공자
             //if(longitude==0||latitude==0){
-            latitude =37.49085971;
-            longitude  =126.72073882;
+            //latitude =37.49085971;
+            //longitude  =126.72073882;
             //default부평역
-            //}
+            //
             longit=String.valueOf(longitude);
             latit=String.valueOf(latitude);
             //Gps 위치제공자에 의한 위치변화. 오차범위가 좁다.

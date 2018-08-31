@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
     //아이디로 로그인시.
     private class HttpTask extends AsyncTask<String, Void, String>{
-        String address, sendMsg, receiveMsg;
+        String address, sendMsg, receiveMsg="";
         ProgressDialog dlg = new ProgressDialog(MainActivity.this);
         JSONArray items;
         @Override
@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent it = new Intent(getApplicationContext(), Main2Activity.class);
 //                it.putExtra("jsonArray", items.toString());
                 startActivity(it);
+                finish();
             }
             else{
                 Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();

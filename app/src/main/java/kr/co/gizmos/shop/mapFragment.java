@@ -48,6 +48,11 @@ public class mapFragment extends Fragment {
 
     }
 
+
+    //37.489471, 126.724550부평역
+    //37.491063, 126.720468
+    //37.491293, 126.722325
+    //37.491259, 126.725651
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -63,7 +68,6 @@ public class mapFragment extends Fragment {
         nGepoint=new NGeoPoint(longit,latit);
         nMapView.setClickable(true);
         nMapView.setEnabled(true);
-        //nMapView.setBuiltInZoomControls(true,null);//화면 줌기능(버튼추가식)
         nMapView.setFocusable(true);
         nMapView.setFocusableInTouchMode(true);
         nMapView.requestFocus();
@@ -141,8 +145,9 @@ public class mapFragment extends Fragment {
 
         @Override
         public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
-            longit=nGeoPoint.getLongitude();
-            latit=nGeoPoint.getLatitude();
+            nGepoint=nGeoPoint;
+            longit=nGepoint.getLongitude();
+            latit=nGepoint.getLatitude();
             setMarker();
         }
 
