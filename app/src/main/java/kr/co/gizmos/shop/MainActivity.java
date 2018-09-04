@@ -68,8 +68,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void load(){//id값 불러오는 함수
         appData= getSharedPreferences("appData", MODE_PRIVATE);
-        id=appData.getString("user_id", "");
-        Log.i("checkid_load", id);
+        //id=appData.getString("user_id", "");
+  //      Log.i("checkid_load", id);
+        id="38";
     }
 
     //아이디가 없을 경우 아이디 생성
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 appData= getSharedPreferences("appData", MODE_PRIVATE);
                 SharedPreferences.Editor editor = appData.edit();
                 editor.putString("user_id", id); //db에서 받아온 아이디 값 저장
+
                 editor.commit();
             }
             else{
@@ -211,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 String inputLine;
                 StringBuffer response = new StringBuffer();
-                while ((inputLine = br.readLine()) != null) {//stringbuffer에 계속 추가 저장
+                if ((inputLine = br.readLine()) != null) {//stringbuffer에 계속 추가 저장
                     response.append(inputLine);
                 }
                 br.close();

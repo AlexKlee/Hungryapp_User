@@ -39,8 +39,9 @@
 
         <activity
             android:name=".AlertDialogActivity"
-            android:theme="@android:style/Theme.Dialog"></activity>
-        <activity android:name=".ReviewActivity"></activity>
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".ReviewActivity" />
+        <activity android:name=".ReviewAll"></activity>
     </application>
 
 </manifest>

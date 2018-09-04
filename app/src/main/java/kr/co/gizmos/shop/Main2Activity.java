@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -115,7 +116,19 @@ public class Main2Activity extends AppCompatActivity {
         im=(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
 
+        list1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //선택한 메뉴에서 본인이 작성한
 
+
+                SharedPreferences.Editor edit=mapref.edit();
+                edit.putString("rv_id",String.valueOf(arrMyData.size()-position));//리스트뷰 번호와 아이디 번호가 반대임?
+                edit.commit();
+                Intent itr= new Intent(Main2Activity.this,ReviewAll.class);
+                startActivity(itr);
+            }
+        });
         //메뉴추천
         btnRecom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,7 +213,8 @@ public class Main2Activity extends AppCompatActivity {
                 String index = jobj.getString("menu_idx");
                 String menuname = jobj.getString("menu_name");
                 String date = jobj.getString("date");
-                MyData md = new MyData(index, date, menuname);
+                String rvid=jobj.getString("rv_idx");//리뷰 아이디.
+                MyData md = new MyData(index, date, menuname,rvid);
                 arrMyData.add(md);
             }
         }catch (JSONException je){

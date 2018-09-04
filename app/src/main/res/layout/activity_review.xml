@@ -10,17 +10,21 @@
         android:layout_height="wrap_content"
         android:text="식사 맛있게 하셨나요?
 리뷰와 평점을 남겨주세요."
+        android:lines="2"
+        android:paddingLeft="5dp"
         android:textSize="30dp"/>
 
     <RatingBar
-        android:layout_width="match_parent"
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:numStars="10"
-        android:rating="5"
-        android:stepSize="1.0"
         android:isIndicator="false"
-        android:id="@+id/rating"/>
+        android:numStars="10"
+        style="?android:attr/ratingBarStyleIndicator"
+        android:rating="5"
+        android:layout_gravity="center"
+        android:stepSize="0.5" />
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -38,6 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edtReview"
+        android:inputType="text"
         android:hint="리뷰를 입력해주세요."/>
 
     <Button
@@ -46,5 +51,6 @@
         android:text="완료"
         android:textSize="20dp"
         android:id="@+id/btnReviewDone"/>
+
 
 </LinearLayout>

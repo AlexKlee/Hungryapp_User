@@ -190,6 +190,7 @@ public class userOption extends AppCompatActivity {
 
     private void save(){//저장버튼 눌렀을 때 값받아오기.
         //체크된 메뉴값 모음
+        menutag="";
         for(int i=0; i<34; i++){
             if(checkboxes[i].isChecked()){//체크되었다면
                 menutag=menutag+menuName[i]+",";

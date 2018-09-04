@@ -1,7 +1,6 @@
 package kr.co.gizmos.shop;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -29,85 +25,53 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class ReviewActivity extends AppCompatActivity {
-    RatingBar rating;
-    EditText edtReview;
-    TextView foodName;
-    ImageView imgReview;
-    Button btnReviewDone;
+public class ReviewAll extends AppCompatActivity {
+    ArrayList<ReviewData> arrRvData= new ArrayList<>();
+    ListView reviewList;
 
-    SharedPreferences revpref;
-
-
-
-    String ratingNum;
-    String menuName, menuID;
-    String userReview, shopReview;
-    String rvid;
-    String userId;
-
-    boolean save=false;//처음엔 저장이 아니라 불러오기.
+    TextView txRvMenuName, txRvReview;// 음식명, 별점, 후기
+    RatingBar rbRvListRating;
+    MyAdapter rvadap;
+    String menuID,ratingNum,userReview,shopReview;
+    String menuName;
+    boolean save=false;
+    SharedPreferences rapref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_review);
-        setTitle("리뷰");
-        //리뷰 하나만 띄우기, 저장
+        setContentView(R.layout.activity_review_all);
+        setTitle("리뷰목록");
+        rapref=getSharedPreferences("appData",MODE_PRIVATE);
+        menuID=rapref.getString("menu_id","");
+        reviewTask rtask = new reviewTask();
+        rtask.execute(menuID);
+        reviewList=findViewById(R.id.reviewList);
 
-        rating=findViewById(R.id.rating);
-        edtReview=findViewById(R.id.edtReview);
-        btnReviewDone=findViewById(R.id.btnReviewDone);
-        foodName=findViewById(R.id.reviewFood);
-        imgReview=findViewById(R.id.imgReview);
+        rvadap=new MyAdapter(this);
+        reviewList.setAdapter(rvadap);
 
-        //서버에서 저장된 리뷰내용과 평점 불러오기.
-        revpref=getSharedPreferences("appData",MODE_PRIVATE);
-        userId=revpref.getString("user_id","");
-        menuName=revpref.getString("menu_name","");
-        menuID=revpref.getString("menu_id","");
-        rvid=revpref.getString("rv_id","");
-        //fName=revpref.getString("foodName","탕");
-        //review=getString("review","리뷰내용");
-/*        rating.setNumStars(Integer.parseInt(ratingNum));
-        foodName.setText(menuName);
-        edtReview.setText(userReview);*/
-        //현재 액티비티 위치 mapfragment2에 전달
-        SharedPreferences.Editor editor = revpref.edit();
-        editor.putString("activity_name", "ReviewActivity");
-        editor.commit();
-
-        //메뉴아이디 불러올것.
-        reviewTask loadTask = new reviewTask();
-        save=false;
-        loadTask.execute(menuID,userId,rvid,null,null);
-
-
-
-
-        btnReviewDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //서버에 리뷰정보 전달.
-                ratingNum=String.valueOf(rating.getRating());
-                userReview=edtReview.getText().toString();
-                save=true;
-                reviewTask reTask = new reviewTask();
-                reTask.execute(rvid,menuID,userId,ratingNum,userReview);//userid? menuid?
-
-                Intent it = new Intent(ReviewActivity.this,ReviewAll.class);
-                startActivity(it);
-                //finish();
-            }
-        });
     }//onCreate end
 
-    //불러오기.
 
+
+
+    public class ReviewData{
+        String menuName;
+        String ratingNum;
+        String userReviewText, shopReviewText;
+        ReviewData(String mN, String rN, String rT, String sT){
+            menuName=mN;
+            ratingNum=rN;
+            userReviewText=rT;
+            shopReviewText=sT;
+        }
+    }
     //리뷰통신, 받아오기, 전달하기.
     public class reviewTask extends AsyncTask<String, Void, String> {
         String address, sendMsg, receiveMsg="";
         //   ProgressDialog dlg = new ProgressDialog(getApplicationContext());
-        JSONObject result= new JSONObject();
+        String result=null;
+        JSONArray jArray;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -124,22 +88,19 @@ public class ReviewActivity extends AppCompatActivity {
 
 
                 try {
-                        menuID = result.getString("mi_idx");
-                        ratingNum= result.getString("rv_score");
-                        userReview = result.getString("rv_comment");
-                        shopReview=result.getString("rv_recomment");
-                        rating.setNumStars(Integer.parseInt(ratingNum));
-     /*                   ReviewData rvd = new ReviewData(menuName,ratingNum,userReview,shopReview);
-                        arrRvData.add(rvd);*/
+                    for(int i=0; i<jArray.length(); i++){//jsonArray에서 JSONobject로 나눠서, 필요항목들 arraylist에 추가
+                        JSONObject jobj = jArray.getJSONObject(i);
+                        menuID = jobj.getString("mi_idx");
+                        ratingNum= jobj.getString("rv_score");
+                        userReview = jobj.getString("rv_comment");
+                        shopReview=jobj.getString("rv_recomment");
+
+                        ReviewData rvd = new ReviewData(menuName,ratingNum,userReview,shopReview);
+                        arrRvData.add(rvd);
                         save=false;
-                        if(userReview.equals("")&&ratingNum.equals("")){
-                            btnReviewDone.setText("리뷰등록");
-                        }else{
-                            btnReviewDone.setText("리뷰수정");
-                            edtReview.setText(userReview);
-                        }
+                    }
                 } catch (JSONException e) {
-                        e.printStackTrace();
+                    e.printStackTrace();
                 }
 
                 //Toast.makeText(getApplicationContext(), "거리전달 성공", Toast.LENGTH_SHORT).show();
@@ -167,11 +128,11 @@ public class ReviewActivity extends AppCompatActivity {
                 startActivity(it);*/
             }
             else{
-                Toast.makeText(getApplicationContext(), "리뷰저장실패", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "리뷰불러오기실패", Toast.LENGTH_SHORT).show();
             }
         }
 
-        //처음에 리스트뷰에 모든 댓글을 불러온다.
+        //해당메뉴에대한전체 리뷰목록 불러오기.
         @Override
         protected String doInBackground(String... strings) {
 
@@ -184,12 +145,9 @@ public class ReviewActivity extends AppCompatActivity {
                 con.setDoInput(true);
                 con.setDoOutput(true);
                 OutputStreamWriter os =new OutputStreamWriter(con.getOutputStream());
-                if(!save){//로딩상황(저장 상황이 아니라면)
-                    sendMsg="app=user&mi_idx="+strings[0]+"&ru_idx="+strings[1]+"&rv_idx="+strings[2];//메뉴번호 전송, 메뉴관련 모든리뷰 불러오기.
-                }else{//저장상황
-                    //메뉴번호mi_idx, 작성자번호(id)ru_idx, 평점rv_score, 후기내용rv_comment
-                    sendMsg="app=user&rv_idx="+strings[0]+"&mi_idx="+strings[1]+"&ru_idx="+strings[2]+"&rv_score="+strings[3]+"&rv_comment="+strings[4];//거리전달 추가.
-                }
+
+                    sendMsg="app=user&mi_idx="+strings[0];//메뉴번호 전송, 메뉴관련 모든리뷰 불러오기.
+
 
                 // userId, Menu, action(choice, away, arrival, cancel)
                 os.write(sendMsg);
@@ -214,12 +172,11 @@ public class ReviewActivity extends AppCompatActivity {
                 //전송받은 완성된 문자열을 JSON 객체에 넣는다.
                 JSONObject jobj = new JSONObject(response.toString());//string buffer값을 json객체에 추가
 
-                if(jobj.has("review")) {//로딩, 저장 상황 구분?!?
+                if(jobj.has("av_score")) {//로딩, 저장 상황 구분?!?
                     receiveMsg="성공";
-                    //String result = jobj.getString("review");
-                    //jArray=new JSONArray(result);
-                    //jobj.getJSONObject()
-                    result=jobj.getJSONObject("review");
+                    String result = jobj.getString("review");
+                    jArray=new JSONArray(result);
+
 
                 }
                 else {
@@ -235,5 +192,48 @@ public class ReviewActivity extends AppCompatActivity {
 
 
 
+    //리스트뷰용어댑터
+    class MyAdapter extends BaseAdapter {
+        Context con;
+        MyAdapter(Context c){
+            con=c;
+        }
 
+        @Override
+
+        public int getCount() {
+            return arrRvData.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if(convertView==null){
+                LayoutInflater inf = LayoutInflater.from(con);
+                convertView=inf.inflate(R.layout.review_list,parent,false);
+            }
+
+            txRvMenuName=convertView.findViewById(R.id.txRvMenuName);
+            txRvReview=convertView.findViewById(R.id.txRvReview);
+            rbRvListRating=convertView.findViewById(R.id.rbRvListRating);
+
+            ReviewData rvd = arrRvData.get(position);
+
+            txRvMenuName.setText(rvd.menuName);
+            rbRvListRating.setNumStars(Integer.parseInt(rvd.ratingNum));
+            txRvReview.setText(rvd.userReviewText);
+
+
+            return convertView;
+        }
+    }//adapter end
 }

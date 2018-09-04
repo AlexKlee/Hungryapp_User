@@ -7,6 +7,7 @@
     android:layout_weight="1"
     android:fillViewport="true"
     android:layout_width="match_parent"
+    android:padding="10dp"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -14,12 +15,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:fitsSystemWindows="true"
+        android:paddingLeft="20dp"
         tools:context=".RandomRecommend">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="메뉴 이름" />
+            android:text="메뉴 이름"
+
+            android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/txMenu"

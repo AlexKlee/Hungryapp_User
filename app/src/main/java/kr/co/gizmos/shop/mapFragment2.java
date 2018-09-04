@@ -137,6 +137,7 @@ public class mapFragment2 extends Fragment {
         super.onResume();
         mMapContext.onResume();
         nLocManager.enableMyLocation(true);
+        activity_name=fragPref.getString("activity_name","");
         setMarker();
     }
     @Override
@@ -292,92 +293,6 @@ public class mapFragment2 extends Fragment {
         }
     };
 
-    //서버에 사용자와 가게간 거리 전달 , MapReservation에서만 실행할 것.
-    private class meterTask extends AsyncTask<String, Void, String> {
-        String address, sendMsg, receiveMsg="";
-        ProgressDialog dlg = new ProgressDialog(getActivity());
-       // JSONArray items;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            address="http://00645.net/eat//??";
-            dlg.setMessage("접속 중");
-            dlg.show();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            dlg.dismiss();
-            if(receiveMsg.equals("성공")){
-                Toast.makeText(getActivity(), "거리전달 성공", Toast.LENGTH_SHORT).show();
-
-                /*//로그인 성공시 sharedpreferrence값 저장
-                fragPref= getActivity().getSharedPreferences("appData", MODE_PRIVATE);
-                SharedPreferences.Editor editor = fragPref.edit();
-                editor.putString("jsonarray", items.toString());//jsonarray내용 String으로 변환해서 저장
-                editor.commit();
-                Intent it = new Intent(getActivity(), Main2Activity.class);
-//                it.putExtra("jsonArray", items.toString());
-                startActivity(it);*/
-            }
-            else{
-                Toast.makeText(getActivity(), "거리값전달 실패", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            try{
-                URL url = new URL(address);
-                HttpURLConnection con = (HttpURLConnection)url.openConnection();
-                con.setRequestMethod("POST");
-                con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset:UTF-8");
-
-                con.setDoInput(true);
-                con.setDoOutput(true);
-                OutputStreamWriter os =new OutputStreamWriter(con.getOutputStream());
-                sendMsg="app=user&user_id="+strings[0];
-                os.write(sendMsg);
-                os.flush();
-                os.close();
-
-
-                int responseCode = con.getResponseCode();
-                BufferedReader br;
-                if(responseCode==200) { // 정상 호출
-                    br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                } else {  // 에러 발생
-                    br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-                }
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-                while ((inputLine = br.readLine()) != null) {//stringbuffer에 계속 추가 저장
-                    response.append(inputLine);
-                }
-                br.close();
-
-                //전송받은 완성된 문자열을 JSON 객체에 넣는다.
-                JSONObject jobj = new JSONObject(response.toString());//string buffer값을 json객체에 추가
-                if(jobj.has("list_item")) {
-  /*                  //result = jobj.getJSONObject("list_item");
-                    receiveMsg = "성공";
-                    total = jobj.getInt("list_item");//?변수 설정필요
-                    if (total >= 1) {
-                        items = jobj.getJSONArray("menu");
-                    }*/
-                }
-                else {
-                    receiveMsg = "실패";
-                    //Toast.makeText(getApplicationContext(), "주소가 확인되지 않습니다. 정확한 주소를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return receiveMsg;
-        }
-    }
 
 }
 

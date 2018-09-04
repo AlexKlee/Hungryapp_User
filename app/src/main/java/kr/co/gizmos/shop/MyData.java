@@ -5,9 +5,11 @@ public class MyData {
     public String index;
     public String date;
     public String contents;
-    MyData(String i, String d, String c){
+    public String rvid;
+    MyData(String i, String d, String c, String r){
         index=i;
         date=d;
-        contents=c;
+        contents=c;//작성자+내용
+        rvid=r;
     }
 }

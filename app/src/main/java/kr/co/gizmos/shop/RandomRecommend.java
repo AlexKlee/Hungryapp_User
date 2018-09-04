@@ -81,15 +81,19 @@ public class RandomRecommend extends AppCompatActivity {
         setTitle("메뉴선택");
         rcpref=getSharedPreferences("appData",MODE_PRIVATE);
         String servi=rcpref.getString("dlg","");
-        if(servi.equals("service quit")){
+        if(servi.equals("service_quit_cancel")||servi.equals("service_quit_entrance")){//서비스가 이 액티비티에서 시작되므로, 서비스 종료를 위해선 어쩔수없이 돌아와서 처리해야함.
             Intent quitsvit = new Intent(this, MyService.class);
             stopService(quitsvit);
             SharedPreferences.Editor editor = rcpref.edit();
+            if(servi.equals("service_quit_cancel")){//취소면 메인화면으로
+                Intent it2 = new Intent(this, Main2Activity.class);
+                startActivity(it2);
+            }else{// 도착이면 리뷰화면으로
+                Intent it3 = new Intent(this, ReviewActivity.class);
+                startActivity(it3);
+            }
             editor.putString("dlg", "fine");
             editor.commit();
-
-            Intent it2 = new Intent(this, Main2Activity.class);
-            startActivity(it2);
             finish();
         }
 
@@ -138,9 +142,9 @@ public class RandomRecommend extends AppCompatActivity {
                         //mapReservaion 액티비티로 이동
                         Intent itR= new Intent(getApplicationContext(), MapReservation.class);
                         startActivity(itR);
-                        finish();
                         Intent its= new Intent(RandomRecommend.this, MyService.class);
                         startService(its);
+                        finish();
 
                     }
                 });//
@@ -152,7 +156,7 @@ public class RandomRecommend extends AppCompatActivity {
                 });
 
                 dlgReservation.show();
-
+                //finish();
 /*                NotificationManager notifiManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
                 //푸시바 누르면 이동 화면 설정
                 Intent notiIntent = new Intent(RandomRecommend.this, MapReservation.class);
@@ -194,14 +198,14 @@ public class RandomRecommend extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             address="http://00645.net/eat/menu_find.php";
-            dlg.setMessage("접속 중");
-            dlg.show();
+ //           dlg.setMessage("접속 중");
+//            dlg.show();
         }
 
         @Override
         protected void onPostExecute(final String s) {
             super.onPostExecute(s);
-            dlg.dismiss();
+//            dlg.dismiss();
             if(receiveMsg.equals("성공")){
                 Toast.makeText(getApplicationContext(), "로그인 성공", Toast.LENGTH_SHORT).show();
                 //로그인 성공시 값불러오기.
@@ -241,6 +245,8 @@ public class RandomRecommend extends AppCompatActivity {
                 SharedPreferences.Editor editor=rcpref.edit();
                 editor.putString("shop_map_x",str[4]);
                 editor.putString("shop_map_y",str[5]);
+                editor.putString("menu_id", str[13]);
+                editor.putString("menu_name",str[14]);
                 editor.putString("activity_name", "RandomRecommend");//현재 이 액티비티에서 실행하고 있다고. pref에 저장., fragment에서 어떤 앱에서 호출하는지 판단 가능하도록.
                 editor.commit();
 
